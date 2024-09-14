@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <!-- basic -->
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- mobile metas -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+      <!-- site metas -->
+      <title>Pluto - Responsive Bootstrap Admin Panel Templates</title>
+      <meta name="keywords" content="">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <!-- site icon -->
+      <link rel="icon" href="/images/fevicon.png" type="image/png" />
+      <!-- bootstrap css -->
+      <link rel="stylesheet" href="/css/bootstrap.min.css" />
+      <!-- site css -->
+      <link rel="stylesheet" href="/style.css" />
+      <!-- responsive css -->
+      <link rel="stylesheet" href="/css/responsive.css" />
+      <!-- color css -->
+      <link rel="stylesheet" href="/css/colors.css" />
+      <!-- select bootstrap -->
+      <link rel="stylesheet" href="/css/bootstrap-select.css" />
+      <!-- scrollbar css -->
+      <link rel="stylesheet" href="/css/perfect-scrollbar.css" />
+      <!-- custom css -->
+      <link rel="stylesheet" href="/css/custom.css" />
+      <!-- calendar file css -->
+      <link rel="stylesheet" href="/js/semantic.min.css" />
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body class="inner_page login">
+      <div class="full_container">
+         <div class="container">
+            <div class="center verticle_center full_height">
+               <div class="login_section">
+                  <div class="logo_login">
+                     <div class="center">
+                       <h1 style="color: azure;">LOGIN </h1>
+                     </div>
+                  </div>
+                  <div class="login_form">
+                     <form id="login-form" action="/auth/login" method="POST">
+                        <fieldset>
+                           <div class="field">
+                              <label class="label_field">Email Address :</label>
+                              <input type="email" id="email" name="email" placeholder="E-mail" required />
+                           </div>
+                           <div class="field">
+                              <label class="label_field">Password :</label>
+                              <input type="password" id="password" name="password" placeholder="Password" required />
+                           </div>
+                           <div class="field">
+                              <label class="label_field hidden">hidden label</label>
+                              <label class="form-check-label">
+                                 <input type="checkbox" class="form-check-input"> Remember Me
+                              </label>
+                              <a class="forgot" href="/register">create Account</a>
+                           </div>
+                           <div class="field margin_0">
+                              <label class="label_field hidden">hidden label</label>
+                              <button type="submit" class="main_bt">Login</button>
+                           </div>
+                        </fieldset>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- jQuery -->
+      <script src="/js/jquery.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/js/bootstrap.min.js"></script>
+      <!-- wow animation -->
+      <script src="/js/animate.js"></script>
+      <!-- select country -->
+      <script src="/js/bootstrap-select.js"></script>
+      <!-- nice scrollbar -->
+      <script src="/js/perfect-scrollbar.min.js"></script>
+      <script>
+         var ps = new PerfectScrollbar('#sidebar');
+      </script>
+      <!-- custom js -->
+      <script src="/js/custom.js"></script>
+      <script>
+         document.getElementById('login-form').addEventListener('submit', async function(event) {
+  console.log('Login form submission event triggered');
+  event.preventDefault();
+  console.log('Default form submission prevented');
+
+  const email = document.querySelector('input[name="email"]').value;
+  console.log('Email retrieved:', email);
+  const password = document.querySelector('input[name="password"]').value;
+  console.log('Password retrieved:', password);
+
+  console.log('Submitting login form with:', { email, password });
+
+  try {
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    console.log('Response received from /auth/login');
+    console.log('Response status:', response.status);
+    const data = await response.json();
+    console.log('Response JSON parsed:', data);
+
+    if (data.success) {
+      console.log('Login successful');
+
+      // Save the tokens in local storage with correct keys
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken); 
+      console.log('Tokens saved to local storage:', {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken
+      });
+
+      // Optionally save user profile data to local storage
+      localStorage.setItem('userProfile', JSON.stringify(data.profile));
+      console.log('User profile saved to local storage:', data.profile);
+
+      // Redirect to the dashboard
+      console.log('Redirecting to dashboard');
+      window.location.href = '/dashboard';
+    } else {
+      // Handle login failure
+      console.error('Login failed:', data.message);
+      // Optionally, display an error message to the user here
+      alert(`Login failed: ${data.message}`);
+    }
+  } catch (err) {
+    console.error('Error during login:', err);
+    // Optionally, handle the error more gracefully, like displaying an error message
+    alert(`Error during login: ${err.message}`);
+  }
+});
+
+      </script>
+   </body>
+</html>
