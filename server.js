@@ -1,11 +1,11 @@
-require('dotenv').config(); // Load environment variables from .env file
+require("dotenv").config(); // Load environment variables from .env file
 
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const fs = require('fs'); // Make sure to require fs
+const fs = require("fs"); // Make sure to require fs
 
 // Initialize express app
 const app = express();
@@ -25,16 +25,18 @@ const router = require("./routes/index");
 app.use(router);
 
 // Static file serving
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/upload", express.static(path.join(__dirname, "upload")));
 
 // Routes for authentication
-app.use('/auth', require('./routes/auth-routes'));
-app.use('/auth/profile', require('./routes/profile-routes'));
+app.use("/auth", require("./routes/auth-routes"));
+app.use("/auth/profile", require("./routes/profile-routes"));
+app.use("/auth/contacts", require("./routes/contact-routes"));
 
 // Database connection
-const DATABASE = process.env.DATABASE || 'mongodb://localhost:27017/CRM'; // Use environment variable or default to local DB
+const DATABASE = process.env.DATABASE || "mongodb://localhost:27017/CRM"; // Use environment variable or default to local DB
 
-console.log('Database URI:', DATABASE); // Print the MongoDB URI for debugging
+console.log("Database URI:", DATABASE); // Print the MongoDB URI for debugging
 
 mongoose
   .connect(DATABASE, { useNewUrlParser: true, useUnifiedTopology: true })
