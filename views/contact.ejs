@@ -1445,18 +1445,23 @@
         }
       }
 
-      // HTML generator for a contact card
       function generateContactHTML(contact) {
         return `
-      <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 profile_details margin_bottom_30">
-        <div class="contact_blog">
-          <h4 class="brief">Digital Strategist</h4>
-          <div class="contact_inner">
-            <div class="left">
-              <h3>${contact.name}</h3>
-              <p><strong>About: </strong>Frontend Developer</p>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 profile_details margin_bottom_30">
+      <div class="contact_blog">
+        <h4 class="brief">Digital Strategist</h4>
+        <div class="contact_inner">
+          <div class="left">
+            <h3>${contact.name}</h3>
+            <p><strong>About: </strong>Frontend Developer</p>
+            <div class="summary-content">
+              <!-- Summary content visible by default -->
+              <p><i class="fa fa-envelope-o"></i> : ${contact.email}</p>
+              <button type="button" class="btn btn-link view-more-btn">View More</button>
+            </div>
+            <div class="full-content" style="display: none;">
+              <!-- Full content hidden initially -->
               <ul class="list-unstyled">
-                <li><i class="fa fa-envelope-o"></i> : ${contact.email}</li>
                 <li><i class="fa fa-phone"></i> : ${contact.phone}</li>
                 <li><i class="fa fa-location-arrow"></i> : ${
                   contact.address
@@ -1465,56 +1470,100 @@
                   contact.gender === "M" ? "Male" : "Female"
                 }</li>
               </ul>
-            </div>
-            <div class="right">
-              <div class="profile_contacts">
-                <img class="img-responsive" src="${
-                  contact.image || "images/default-profile.png"
-                }" alt="Profile Image" />
-              </div>
-            </div>
-            <div class="bottom_list">
-              <div class="left_rating">
-                <p class="ratings">
-                  <a href="#"><span class="fa fa-star"></span></a>
-                  <a href="#"><span class="fa fa-star"></span></a>
-                  <a href="#"><span class="fa fa-star"></span></a>
-                  <a href="#"><span class="fa fa-star"></span></a>
-                  <a href="#"><span class="fa fa-star-o"></span></a>
-                </p>
-              </div>
-              <div class="right_button">
+              <div class="action-buttons">
+                <!-- Action buttons are now visible when full-content is displayed -->
                 <button type="button" class="btn btn-success btn-xs update-contact-btn" data-id="${
                   contact._id
                 }" 
-        data-name="${contact.name}" 
-        data-email="${contact.email}" 
-        data-phone="${contact.phone}" 
-        data-address="${contact.address}" 
-        data-city="${contact.city}" 
-        data-country="${contact.country}">
-  <i class="fa fa-user"></i>
-  Update Contact
-</button>
+                  data-name="${contact.name}" 
+                  data-email="${contact.email}" 
+                  data-phone="${contact.phone}" 
+                  data-address="${contact.address}" 
+                  data-city="${contact.city}" 
+                  data-country="${contact.country}">
+                  <i class="fa fa-user"></i> Update Contact
+                </button>
 
-                <button type="button" class="btn btn-primary btn-xs" data-id="${
+                <button type="button" class="btn btn-primary btn-xs delete-contact-btn" data-id="${
                   contact._id
                 }">
-                <i class="fa fa-trash"></i> Delete Contact
+                  <i class="fa fa-trash"></i> Delete Contact
                 </button>
-                <div id="response-message"></div>
               </div>
+              <button type="button" class="btn btn-link view-less-btn">View Less</button>
+            </div>
+          </div>
+          <div class="right">
+            <div class="profile_contacts">
+              <img class="img-responsive" src="${
+                contact.image || "images/default-profile.png"
+              }" alt="Profile Image" />
+            </div>
+          </div>
+          <div class="bottom_list">
+            <div class="left_rating">
+              <p class="ratings">
+                <a href="#"><span class="fa fa-star"></span></a>
+                <a href="#"><span class="fa fa-star"></span></a>
+                <a href="#"><span class="fa fa-star"></span></a>
+                <a href="#"><span class="fa fa-star"></span></a>
+                <a href="#"><span class="fa fa-star-o"></span></a>
+              </p>
+            </div>
+            <div class="right_button">
+              <!-- You can keep other buttons here if needed -->
+              <div id="response-message"></div>
             </div>
           </div>
         </div>
       </div>
-    `;
+    </div>
+  `;
       }
 
       // Call getContacts when the page loads
       document.addEventListener("DOMContentLoaded", () => {
         console.log("Calling getContacts when the page loads.");
         getContacts();
+      });
+    </script>
+    <script>
+      // Event listener to toggle between viewing more and less content
+      document.addEventListener("click", function (e) {
+        // Handle "View More" button click
+        if (e.target && e.target.classList.contains("view-more-btn")) {
+          const leftSection = e.target.closest(".left");
+          const fullContent = leftSection.querySelector(".full-content");
+          const summaryContent = leftSection.querySelector(".summary-content");
+
+          fullContent.style.display = "block"; // Show full content
+          summaryContent.style.display = "none"; // Hide summary
+        }
+
+        // Handle "View Less" button click
+        if (e.target && e.target.classList.contains("view-less-btn")) {
+          const leftSection = e.target.closest(".left");
+          const fullContent = leftSection.querySelector(".full-content");
+          const summaryContent = leftSection.querySelector(".summary-content");
+
+          fullContent.style.display = "none"; // Hide full content
+          summaryContent.style.display = "block"; // Show summary
+        }
+
+        // Optional: Handle Update and Delete button clicks here
+        if (e.target && e.target.closest(".update-contact-btn")) {
+          const button = e.target.closest(".update-contact-btn");
+          const contactId = button.getAttribute("data-id");
+          // Implement your update logic here
+          alert(`Update Contact ID: ${contactId}`);
+        }
+
+        if (e.target && e.target.closest(".delete-contact-btn")) {
+          const button = e.target.closest(".delete-contact-btn");
+          const contactId = button.getAttribute("data-id");
+          // Implement your delete logic here
+          alert(`Delete Contact ID: ${contactId}`);
+        }
       });
     </script>
     <script>
